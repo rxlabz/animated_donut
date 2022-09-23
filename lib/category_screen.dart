@@ -6,10 +6,15 @@ import 'model.dart';
 import 'segment_helpers.dart';
 import 'subcategories_screen.dart';
 
+/// main screen
+/// display the title, the categories donut chart and categories data table
+///
 class CategoryScreen extends StatelessWidget {
   final List<Category> categories;
 
-  const CategoryScreen({Key? key, required this.categories}) : super(key: key);
+  final ValueNotifier<int?> selectedCategoryIndex = ValueNotifier(null);
+
+  CategoryScreen({Key? key, required this.categories}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,40 +32,37 @@ class CategoryScreen extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: BoxConstraints.loose(graphSize),
-                child: CategoryDonutHero(categories: categories),
+                child: ValueListenableBuilder<int?>(
+                  valueListenable: selectedCategoryIndex,
+                  builder: (context, categoryIndex, _) {
+                    return CategoryDonutHero(
+                      categories: categories,
+                      selectedCategoryIndex: selectedCategoryIndex.value,
+                    );
+                  },
+                ),
               ),
             ),
           ),
           Flexible(
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: const {
-                    0: FractionColumnWidth(.1),
-                    1: FractionColumnWidth(.5),
-                    2: FractionColumnWidth(.4),
-                  },
-                  children: categories
-                      .map(
-                        (e) => TableRow(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                color: e.color,
-                                width: 32,
-                                height: 32,
-                              ),
-                            ),
-                            Text(e.title),
-                            Text('${e.total.toStringAsFixed(2)}€')
-                          ],
-                        ),
-                      )
-                      .toList(),
-                ),
+              child: CategoriesTable(
+                categories: categories,
+                onSelection: (category) {
+                  final selectedIndex = categories.indexOf(category);
+                  selectedCategoryIndex.value = selectedIndex;
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, anim1, anim2) => SubCategoryScreen(
+                        key: ValueKey(category),
+                        category: categories[selectedIndex],
+                      ),
+                      reverseTransitionDuration: donutDuration,
+                      transitionsBuilder: fadeTransitionBuilder,
+                      transitionDuration: donutDuration,
+                    ),
+                  );
+                },
               ),
             ),
           )
@@ -70,10 +72,72 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
+class CategoriesTable extends StatelessWidget {
+  final List<Category> categories;
+
+  final ValueChanged<Category> onSelection;
+
+  const CategoriesTable({
+    Key? key,
+    required this.categories,
+    required this.onSelection,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Table(
+        border: TableBorder.symmetric(
+          outside: BorderSide(color: Colors.grey.shade300),
+        ),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: const {
+          0: FractionColumnWidth(.1),
+          1: FractionColumnWidth(.5),
+          2: FractionColumnWidth(.4),
+        },
+        children: categories
+            .map(
+              (category) => TableRow(
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey.shade50,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: category.color,
+                      width: 32,
+                      height: 32,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => onSelection(category),
+                    child: Text(category.title),
+                  ),
+                  Text('${category.total.toStringAsFixed(2)}€')
+                ],
+              ),
+            )
+            .toList(),
+      ),
+    );
+  }
+}
+
 class CategoryDonutHero extends StatefulWidget {
   final List<Category> categories;
 
-  const CategoryDonutHero({required this.categories, super.key});
+  final int? selectedCategoryIndex;
+
+  const CategoryDonutHero({
+    required this.categories,
+    required this.selectedCategoryIndex,
+    super.key,
+  });
 
   @override
   State<CategoryDonutHero> createState() => _CategoryDonutHeroState();
@@ -89,6 +153,14 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
   void initState() {
     super.initState();
     anim.forward();
+  }
+
+  @override
+  void didUpdateWidget(covariant CategoryDonutHero oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedCategoryIndex != widget.selectedCategoryIndex) {
+      selectedCategoryIndex = widget.selectedCategoryIndex;
+    }
   }
 
   @override
@@ -139,7 +211,7 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
         builder: (context, _) => AspectRatio(
           aspectRatio: 1,
           child: ChartView(
-            key: const Key('transition-donut'),
+            key: ValueKey(selectedCategoryIndex),
             selectedIndex: selectedCategoryIndex,
             transitionProgress: heroAnim.value,
             onSelection: (newIndex) {},
