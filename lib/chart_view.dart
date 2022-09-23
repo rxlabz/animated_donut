@@ -93,7 +93,7 @@ class ChartView extends StatelessWidget {
                       value != null && value.title!.isNotEmpty
                           ? Positioned(
                               left: value.position!.dx - 40,
-                              top: value.position!.dy,
+                              top: value.position!.dy - 52,
                               child: IgnorePointer(
                                 ignoring: true,
                                 child: SegmentTooltip(
