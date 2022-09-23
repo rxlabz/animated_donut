@@ -56,7 +56,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
             ),
             Padding(
               padding: const EdgeInsets.all(24),
-              child: Text('Donut', style: textTheme.displayMedium),
+              child: Text(widget.category.title, style: textTheme.displaySmall),
             ),
             Flexible(
               child: ConstrainedBox(
