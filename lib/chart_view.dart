@@ -17,9 +17,6 @@ class ChartView extends StatelessWidget {
   final int? selectedIndex;
   final double transitionProgress;
 
-  // if set : draw a full circle behind the sbucategory chart
-  final Color? backgroundColor;
-
   final ValueChanged<int> onSelection;
 
   final ValueNotifier<TooltipNotification?> tooltipData = ValueNotifier(null);
@@ -34,7 +31,6 @@ class ChartView extends StatelessWidget {
     this.categories,
     this.selectedCategory,
     this.selectedIndex,
-    this.backgroundColor,
   });
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:animated_donut/data.dart';
 import 'package:flutter/material.dart';
 
 import 'chart_view.dart';
@@ -75,7 +74,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
                         ),
                         anim: anim,
                         transitionProgress: 0,
-                        backgroundColor: widget.category.color,
                         onSelection: (int value) {},
                       ),
                     ),
