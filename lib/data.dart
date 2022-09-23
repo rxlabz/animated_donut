@@ -27,7 +27,7 @@ final categories = [
     subCategories: [
       SubCategory(
         title: 'SubCat. B1',
-        operations: [2000, 50, 72],
+        operations: [200, 50, 72],
         color: Colors.orange.shade200,
       ),
       SubCategory(

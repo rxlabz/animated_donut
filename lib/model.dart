@@ -50,7 +50,7 @@ class Category extends AbstractCategory {
   @override
   double get total => subCategories.fold(
       0.0,
-      (previousValue, element) => element.operations
+      (previousValue, element) => previousValue + element.operations
           .fold(0.0, (previousValue, element) => previousValue + element));
 
   Category({
