@@ -41,78 +41,86 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: Navigator.of(context).pop,
-                child: const Text('Close'),
-              ),
-              Flexible(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.loose(graphSize),
-                  child: Stack(
-                    children: [
-                      _buildBackgroundChart(),
-                      Hero(
-                        tag: 'donut',
-                        child: ChartView(
-                          key: ValueKey(widget.subCategories),
-                          segments: computeSegments(widget.subCategories),
-                          intervals: computeSegmentIntervals(
-                            categories: widget.subCategories,
-                            anim: anim,
-                          ),
-                          anim: anim,
-                          transitionProgress: 0,
-                          backgroundColor: widget.category.color,
-                          onSelection: (int value) {},
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    columnWidths: const {
-                      0: FractionColumnWidth(.1),
-                      1: FractionColumnWidth(.5),
-                      2: FractionColumnWidth(.4),
-                    },
-                    children: widget.subCategories
-                        .map(
-                          (e) => TableRow(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  color: e.color,
-                                  width: 32,
-                                  height: 32,
-                                ),
-                              ),
-                              Text(e.title),
-                              Text('${e.total.toStringAsFixed(2)}€')
-                            ],
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
 
-  /// full circle
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: Navigator.of(context).pop,
+              child: const Text('Close'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Text('Donut', style: textTheme.displayMedium),
+            ),
+            Flexible(
+              child: ConstrainedBox(
+                constraints: BoxConstraints.loose(graphSize),
+                child: Stack(
+                  children: [
+                    _buildBackgroundChart(),
+                    Hero(
+                      tag: 'donut',
+                      child: ChartView(
+                        key: ValueKey(widget.subCategories),
+                        segments: computeSegments(widget.subCategories),
+                        intervals: computeSegmentIntervals(
+                          categories: widget.subCategories,
+                          anim: anim,
+                        ),
+                        anim: anim,
+                        transitionProgress: 0,
+                        backgroundColor: widget.category.color,
+                        onSelection: (int value) {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                  columnWidths: const {
+                    0: FractionColumnWidth(.1),
+                    1: FractionColumnWidth(.5),
+                    2: FractionColumnWidth(.4),
+                  },
+                  children: widget.subCategories
+                      .map(
+                        (e) => TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                color: e.color,
+                                width: 32,
+                                height: 32,
+                              ),
+                            ),
+                            Text(e.title),
+                            Text('${e.total.toStringAsFixed(2)}€')
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// background full circle
   ChartView _buildBackgroundChart() => ChartView(
         key: ValueKey(widget.category),
         segments: [
@@ -124,7 +132,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
             subtitle: '',
           )
         ],
-        selectedIndex: categories.indexOf(widget.category),
+        selectedIndex:0,
         intervals: [
           CurvedAnimation(
             parent: stoppedAnim,

@@ -56,7 +56,7 @@ class ChartView extends StatelessWidget {
                     return Center(
                       child: Opacity(
                         opacity: e.index == selectedIndex
-                            ? 1
+                            ? 0
                             : 1 - transitionProgress,
                         child: DonutSegmentPaint(
                           key: const Key('donut'),
