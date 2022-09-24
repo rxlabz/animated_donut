@@ -4,6 +4,7 @@ import 'chart_view.dart';
 import 'fade_transition.dart';
 import 'model.dart';
 import 'subcategories_screen.dart';
+import 'ui.dart';
 
 /// main screen
 /// display the title, the categories donut chart and categories data table
@@ -20,43 +21,36 @@ class CategoryScreen extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(24),
             child: Text('Donut', style: textTheme.displayMedium),
           ),
-          Flexible(
-            child: ValueListenableBuilder<int?>(
-              valueListenable: selectedCategoryIndex,
-              builder: (context, categoryIndex, _) => CategoryDonutHero(
-                categories: categories,
-                selectedCategoryIndex: categoryIndex,
-              ),
+          ValueListenableBuilder<int?>(
+            valueListenable: selectedCategoryIndex,
+            builder: (context, categoryIndex, _) => CategoryDonutHero(
+              categories: categories,
+              selectedCategoryIndex: categoryIndex,
             ),
           ),
-          Flexible(
-            child: Center(
-              child: CategoriesTable(
-                categories: categories,
-                onSelection: (category) {
-                  final selectedIndex = categories.indexOf(category);
-                  selectedCategoryIndex.value = selectedIndex;
-                  Navigator.of(context).push(
-                    PageRouteBuilder(
-                      pageBuilder: (context, anim1, anim2) => SubCategoryScreen(
-                        key: ValueKey(category),
-                        category: categories[selectedIndex],
-                      ),
-                      transitionsBuilder: fadeTransitionBuilder,
-                      transitionDuration: donutDuration,
-                      reverseTransitionDuration: donutDuration,
-                    ),
-                  );
-                },
-              ),
-            ),
+          CategoriesTable(
+            categories: categories,
+            onSelection: (category) {
+              final selectedIndex = categories.indexOf(category);
+              selectedCategoryIndex.value = selectedIndex;
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (context, anim1, anim2) => SubCategoryScreen(
+                    key: ValueKey(category),
+                    category: categories[selectedIndex],
+                  ),
+                  transitionsBuilder: fadeTransitionBuilder,
+                  transitionDuration: donutDuration,
+                  reverseTransitionDuration: donutDuration,
+                ),
+              );
+            },
           )
         ],
       ),
@@ -96,18 +90,11 @@ class CategoriesTable extends StatelessWidget {
   }
 
   TableRow _buildRow(category) => TableRow(
-        decoration: BoxDecoration(
-          color: Colors.blueGrey.shade100.withOpacity(.3),
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: Colors.white, width: 1),
-        ),
+        decoration: tableDecoration,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:8.0),
-            child: Container(
-              color: category.color,
-              height: 24,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Container(color: category.color, height: 24),
           ),
           Text(category.title),
           Text('${category.total.toStringAsFixed(2)}€'),
@@ -166,7 +153,8 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
 
   @override
   Widget build(BuildContext context) => Center(
-        child: ConstrainedBox(
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 24),
           constraints: BoxConstraints.loose(graphSize),
           child: Hero(
             tag: 'donut',

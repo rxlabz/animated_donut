@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'chart_view.dart';
 import 'model.dart';
 import 'segment_paint.dart';
+import 'ui.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final Category category;
@@ -39,78 +40,80 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: Navigator.of(context).pop,
-              child: const Text('Close'),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Text(widget.category.title, style: textTheme.displaySmall),
-            ),
-            Flexible(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.loose(graphSize),
-                child: Stack(
-                  children: [
-                    _DonutBackground(
-                      widget.category.color,
-                      key: ValueKey(widget.category.color),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          widget.category.title,
+          style: TextStyle(color: widget.category.color),
+        ),
+        leading: BackButton(color: widget.category.color),
+      ),
+      body: ListView(
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 24),
+              constraints: BoxConstraints.loose(graphSize),
+              child: Stack(
+                children: [
+                  _DonutBackground(
+                    widget.category.color,
+                    key: ValueKey(widget.category.color),
+                  ),
+                  Hero(
+                    tag: 'donut',
+                    child: ChartView(
+                      key: ValueKey(widget.subCategories),
+                      categories: widget.subCategories,
+                      animation: anim,
+                      transitionProgress: 0,
+                      onSelection: (int value) {},
                     ),
-                    Hero(
-                      tag: 'donut',
-                      child: ChartView(
-                        key: ValueKey(widget.subCategories),
-                        categories: widget.subCategories,
-                        animation: anim,
-                        transitionProgress: 0,
-                        onSelection: (int value) {},
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                  columnWidths: const {
-                    0: FractionColumnWidth(.1),
-                    1: FractionColumnWidth(.5),
-                    2: FractionColumnWidth(.4),
-                  },
-                  children: widget.subCategories
-                      .map(
-                        (e) => TableRow(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                color: e.color,
-                                width: 32,
-                                height: 32,
-                              ),
-                            ),
-                            Text(e.title),
-                            Text('${e.total.toStringAsFixed(2)}€')
-                          ],
-                        ),
-                      )
-                      .toList(),
-                ),
+          ),
+          _SubCategoriesTable(widget: widget)
+        ],
+      ),
+    );
+  }
+}
+
+class _SubCategoriesTable extends StatelessWidget {
+  const _SubCategoriesTable({Key? key, required this.widget}) : super(key: key);
+
+  final SubCategoryScreen widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: const {
+          0: FractionColumnWidth(.1),
+          1: FractionColumnWidth(.5),
+          2: FractionColumnWidth(.4),
+        },
+        children: widget.subCategories
+            .map(
+              (e) => TableRow(
+                decoration: tableDecoration,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(color: e.color, height: 24),
+                  ),
+                  Text(e.title),
+                  Text('${e.total.toStringAsFixed(2)}€')
+                ],
               ),
             )
-          ],
-        ),
+            .toList(),
       ),
     );
   }
