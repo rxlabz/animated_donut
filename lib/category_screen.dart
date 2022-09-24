@@ -168,7 +168,7 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
           constraints: BoxConstraints.loose(graphSize),
           child: Hero(
             tag: 'donut',
-            flightShuttleBuilder: buildTransitionHero,
+            flightShuttleBuilder: _buildTransitionHero,
             child: ChartView(
               key: ValueKey(widget.categories),
               transitionProgress: 0,
@@ -197,7 +197,7 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
         ),
       );
 
-  Widget buildTransitionHero(
+  Widget _buildTransitionHero(
     BuildContext context,
     Animation<double> heroAnim,
     HeroFlightDirection direction,

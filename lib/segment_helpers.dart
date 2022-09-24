@@ -5,50 +5,46 @@ import 'package:quiver/iterables.dart';
 
 import 'model.dart';
 
-List<SegmentData> computeSegments<T extends AbstractCategory>(
-  List<T> categories,
-) {
-  // calcul des angles des ≠ segments
-  return enumerate(categories).fold<List<SegmentData>>(<SegmentData>[],
+List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
+    enumerate(categories).fold<List<SegmentData>>(
+      <SegmentData>[],
       (previousValue, category) {
-    if (previousValue.isEmpty) {
-      final elementSweepAngle =
-          category.value.total / categories.total * 2 * math.pi;
+        final elementSweepAngle =
+            category.value.total / categories.total * 2 * math.pi;
 
-      return [
-        SegmentData(
-          title: category.value.title,
-          subtitle: '${category.value.total.toStringAsFixed(2)}€',
-          startAngle: -math.pi / 2,
-          sweepAngle: elementSweepAngle,
-          color: category.value.color,
-        )
-      ];
-    }
-    final previousElement = previousValue.last;
+        if (previousValue.isEmpty) {
+          return [
+            SegmentData(
+              title: category.value.title,
+              subtitle: '${category.value.total.toStringAsFixed(2)}€',
+              startAngle: -math.pi / 2,
+              sweepAngle: elementSweepAngle,
+              color: category.value.color,
+            )
+          ];
+        }
 
-    final elementSweepAngle =
-        category.value.total / categories.total * 2 * math.pi;
-
-    return previousValue
-      ..add(
-        SegmentData(
-          title: category.value.title,
-          subtitle: '${category.value.total.toStringAsFixed(2)}€',
-          startAngle: previousElement.startAngle + previousElement.sweepAngle,
-          sweepAngle: elementSweepAngle,
-          color: category.value.color,
-        ),
-      );
-  });
-}
+        final previousElement = previousValue.last;
+        return previousValue
+          ..add(
+            SegmentData(
+              title: category.value.title,
+              subtitle: '${category.value.total.toStringAsFixed(2)}€',
+              startAngle:
+                  previousElement.startAngle + previousElement.sweepAngle,
+              sweepAngle: elementSweepAngle,
+              color: category.value.color,
+            ),
+          );
+      },
+    );
 
 List<Animation> computeSegmentIntervals({
-  required AnimationController anim,
+  required Animation<double> anim,
   required List<AbstractCategory> categories,
 }) {
   final intervalValues = <List<double>>[];
-  final intervals = <CurvedAnimation>[];
+  final intervals = <Animation>[];
 
   for (final category in enumerate(categories)) {
     if (category.index == 0) {
