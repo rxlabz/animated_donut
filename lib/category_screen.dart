@@ -74,9 +74,6 @@ class CategoriesTable extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Table(
-        border: TableBorder.symmetric(
-          outside: BorderSide(color: Colors.grey.shade300),
-        ),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         columnWidths: const {
           0: FractionColumnWidth(.1),
