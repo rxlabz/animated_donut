@@ -29,18 +29,11 @@ class CategoryScreen extends StatelessWidget {
             child: Text('Donut', style: textTheme.displayMedium),
           ),
           Flexible(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints.loose(graphSize),
-                child: ValueListenableBuilder<int?>(
-                  valueListenable: selectedCategoryIndex,
-                  builder: (context, categoryIndex, _) {
-                    return CategoryDonutHero(
-                      categories: categories,
-                      selectedCategoryIndex: selectedCategoryIndex.value,
-                    );
-                  },
-                ),
+            child: ValueListenableBuilder<int?>(
+              valueListenable: selectedCategoryIndex,
+              builder: (context, categoryIndex, _) => CategoryDonutHero(
+                categories: categories,
+                selectedCategoryIndex: categoryIndex,
               ),
             ),
           ),
@@ -57,9 +50,9 @@ class CategoryScreen extends StatelessWidget {
                         key: ValueKey(category),
                         category: categories[selectedIndex],
                       ),
-                      reverseTransitionDuration: donutDuration,
                       transitionsBuilder: fadeTransitionBuilder,
                       transitionDuration: donutDuration,
+                      reverseTransitionDuration: donutDuration,
                     ),
                   );
                 },
@@ -170,32 +163,37 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
   }
 
   @override
-  Widget build(BuildContext context) => Hero(
-        tag: 'donut',
-        flightShuttleBuilder: buildTransitionHero,
-        child: ChartView(
-          key: ValueKey(widget.categories),
-          transitionProgress: 0,
-          onSelection: (newIndex) {
-            setState(() => selectedCategoryIndex = newIndex);
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, anim1, anim2) => SubCategoryScreen(
-                  category: widget.categories[newIndex],
-                ),
-                reverseTransitionDuration: donutDuration,
-                transitionsBuilder: fadeTransitionBuilder,
-                transitionDuration: donutDuration,
+  Widget build(BuildContext context) => Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints.loose(graphSize),
+          child: Hero(
+            tag: 'donut',
+            flightShuttleBuilder: buildTransitionHero,
+            child: ChartView(
+              key: ValueKey(widget.categories),
+              transitionProgress: 0,
+              onSelection: (newIndex) {
+                setState(() => selectedCategoryIndex = newIndex);
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, anim1, anim2) => SubCategoryScreen(
+                      category: widget.categories[newIndex],
+                    ),
+                    reverseTransitionDuration: donutDuration,
+                    transitionsBuilder: fadeTransitionBuilder,
+                    transitionDuration: donutDuration,
+                  ),
+                );
+              },
+              categories: widget.categories,
+              segments: computeSegments(widget.categories),
+              intervals: computeSegmentIntervals(
+                categories: widget.categories,
+                anim: anim,
               ),
-            );
-          },
-          categories: widget.categories,
-          segments: computeSegments(widget.categories),
-          intervals: computeSegmentIntervals(
-            categories: widget.categories,
-            anim: anim,
+              animation: anim,
+            ),
           ),
-          anim: anim,
         ),
       );
 
@@ -221,10 +219,7 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
               categories: widget.categories,
               anim: anim,
             ),
-            anim: AnimationController(
-              vsync: this,
-              duration: donutDuration,
-            ),
+            animation: const AlwaysStoppedAnimation(0),
           ),
         ),
       );

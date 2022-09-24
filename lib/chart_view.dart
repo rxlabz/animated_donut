@@ -11,7 +11,7 @@ class ChartView extends StatelessWidget {
   final List<Category>? categories;
   final List<Animation> intervals;
   final List<SegmentData> segments;
-  final AnimationController anim;
+  final Animation<double> animation;
 
   final Category? selectedCategory;
   final int? selectedIndex;
@@ -23,7 +23,7 @@ class ChartView extends StatelessWidget {
 
   ChartView({
     super.key,
-    required this.anim,
+    required this.animation,
     required this.intervals,
     required this.segments,
     required this.transitionProgress,
@@ -41,7 +41,7 @@ class ChartView extends StatelessWidget {
           return false;
         },
         child: AnimatedBuilder(
-          animation: anim,
+          animation: animation,
           builder: (context, _) => FittedBox(
             fit: BoxFit.fill,
             child: Stack(

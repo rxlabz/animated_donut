@@ -72,7 +72,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
                           categories: widget.subCategories,
                           anim: anim,
                         ),
-                        anim: anim,
+                        animation: anim,
                         transitionProgress: 0,
                         onSelection: (int value) {},
                       ),
@@ -137,7 +137,7 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
             curve: Curves.linear,
           ),
         ],
-        anim: stoppedAnim,
+        animation: stoppedAnim,
         transitionProgress: 1,
         onSelection: (int value) {},
       );
