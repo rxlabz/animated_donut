@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'chart_view.dart';
 import 'model.dart';
-import 'segment_helpers.dart';
+import 'segment_paint.dart';
 
 class SubCategoryScreen extends StatefulWidget {
   final Category category;
@@ -24,8 +24,6 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
     with TickerProviderStateMixin {
   late final anim =
       AnimationController(vsync: this, duration: const Duration(seconds: 1));
-  late final stoppedAnim = AnimationController(
-      vsync: this, duration: const Duration(seconds: 1), value: 1);
 
   @override
   void initState() {
@@ -62,16 +60,12 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
                 constraints: BoxConstraints.loose(graphSize),
                 child: Stack(
                   children: [
-                    _buildBackgroundChart(),
+                    _DonutBackground(widget.category.color),
                     Hero(
                       tag: 'donut',
                       child: ChartView(
                         key: ValueKey(widget.subCategories),
-                        segments: computeSegments(widget.subCategories),
-                        intervals: computeSegmentIntervals(
-                          categories: widget.subCategories,
-                          anim: anim,
-                        ),
+                        categories: widget.subCategories,
                         animation: anim,
                         transitionProgress: 0,
                         onSelection: (int value) {},
@@ -117,28 +111,28 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
       ),
     );
   }
+}
 
-  /// background full circle
-  ChartView _buildBackgroundChart() => ChartView(
-        key: ValueKey(widget.category),
-        segments: [
+class _DonutBackground extends StatelessWidget {
+  final Color color;
+
+  const _DonutBackground(this.color, {super.key});
+
+  @override
+  Widget build(BuildContext context) => FittedBox(
+        fit: BoxFit.fill,
+        child: DonutSegmentPaint(
+          key: const Key('donut'),
           SegmentData(
             title: '',
             startAngle: pi / 2,
             sweepAngle: 2 * pi,
-            color: widget.category.color,
+            color: color,
             subtitle: '',
-          )
-        ],
-        selectedIndex:0,
-        intervals: [
-          CurvedAnimation(
-            parent: stoppedAnim,
-            curve: Curves.linear,
           ),
-        ],
-        animation: stoppedAnim,
-        transitionProgress: 1,
-        onSelection: (int value) {},
+          progress: 1,
+          transitionProgress: 1,
+          onSelection: () {},
+        ),
       );
 }

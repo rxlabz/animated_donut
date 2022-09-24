@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'chart_view.dart';
 import 'fade_transition.dart';
 import 'model.dart';
-import 'segment_helpers.dart';
 import 'subcategories_screen.dart';
 
 /// main screen
@@ -186,11 +185,6 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
                 );
               },
               categories: widget.categories,
-              segments: computeSegments(widget.categories),
-              intervals: computeSegmentIntervals(
-                categories: widget.categories,
-                anim: anim,
-              ),
               animation: anim,
             ),
           ),
@@ -214,12 +208,7 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
             transitionProgress: heroAnim.value,
             onSelection: (newIndex) {},
             categories: widget.categories,
-            segments: computeSegments(widget.categories),
-            intervals: computeSegmentIntervals(
-              categories: widget.categories,
-              anim: anim,
-            ),
-            animation: const AlwaysStoppedAnimation(0),
+            animation: const AlwaysStoppedAnimation(1),
           ),
         ),
       );

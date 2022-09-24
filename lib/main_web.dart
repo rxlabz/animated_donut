@@ -15,12 +15,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    theme: ThemeData(
-      //https://github.com/flutter/flutter/issues/93140
-      fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
-          ? '-apple-system'
-          : null,
-    ),
+        theme: ThemeData(
+          //https://github.com/flutter/flutter/issues/93140
+          fontFamily: kIsWeb && window.navigator.userAgent.contains('OS 15_')
+              ? '-apple-system'
+              : null,
+        ),
         home: CategoryScreen(categories: categories),
       );
 }

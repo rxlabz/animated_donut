@@ -40,7 +40,7 @@ abstract class AbstractCategory {
 
 extension CategoryListExtensions on List<AbstractCategory> {
   double get total =>
-      fold(0.0, (previousValue, element) => previousValue + element.total);
+      fold(0.0, (previousValue, category) => previousValue + category.total);
 }
 
 class Category extends AbstractCategory {
@@ -48,10 +48,7 @@ class Category extends AbstractCategory {
   List<SubCategory> get subCategories => List.unmodifiable(_subCategories);
 
   @override
-  double get total => subCategories.fold(
-      0.0,
-      (previousValue, element) => previousValue + element.operations
-          .fold(0.0, (previousValue, element) => previousValue + element));
+  double get total => _subCategories.total;
 
   Category({
     required String title,
@@ -78,7 +75,7 @@ class SubCategory extends AbstractCategory {
 
   @override
   double get total =>
-      operations.fold(0.0, (previousValue, element) => previousValue + element);
+      operations.reduce((previousValue, element) => previousValue + element);
 
   SubCategory({
     required String title,

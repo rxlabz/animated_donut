@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart';
 
 import 'model.dart';
+import 'segment_helpers.dart';
 import 'segment_paint.dart';
 
 const donutDuration = Duration(seconds: 1);
 
 class ChartView extends StatelessWidget {
-  final List<Category>? categories;
   final List<Animation> intervals;
   final List<SegmentData> segments;
   final Animation<double> animation;
 
-  final Category? selectedCategory;
   final int? selectedIndex;
   final double transitionProgress;
 
@@ -24,14 +23,15 @@ class ChartView extends StatelessWidget {
   ChartView({
     super.key,
     required this.animation,
-    required this.intervals,
-    required this.segments,
+    required List<AbstractCategory> categories,
     required this.transitionProgress,
     required this.onSelection,
-    this.categories,
-    this.selectedCategory,
     this.selectedIndex,
-  });
+  })  : segments = computeSegments(categories),
+        intervals = computeSegmentIntervals(
+          anim: animation,
+          categories: categories,
+        );
 
   @override
   Widget build(BuildContext context) =>
@@ -59,9 +59,7 @@ class ChartView extends StatelessWidget {
                           e.value,
                           progress: intervals[e.index].value,
                           transitionProgress: e.index == selectedIndex ? 1 : 0,
-                          onSelection: categories == null
-                              ? null
-                              : () => onSelection(e.index),
+                          onSelection: () => onSelection(e.index),
                         ),
                       ),
                     );

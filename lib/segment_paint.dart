@@ -23,7 +23,7 @@ class DonutSegmentPaint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MouseRegion(
-    cursor: MaterialStateMouseCursor.clickable,
+        cursor: MaterialStateMouseCursor.clickable,
         onEnter: (event) => TooltipNotification(
           position: event.localPosition,
           title: data.title,
