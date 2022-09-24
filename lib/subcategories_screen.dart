@@ -60,7 +60,10 @@ class _SubCategoryScreenState extends State<SubCategoryScreen>
                 constraints: BoxConstraints.loose(graphSize),
                 child: Stack(
                   children: [
-                    _DonutBackground(widget.category.color),
+                    _DonutBackground(
+                      widget.category.color,
+                      key: ValueKey(widget.category.color),
+                    ),
                     Hero(
                       tag: 'donut',
                       child: ChartView(

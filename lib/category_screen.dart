@@ -86,38 +86,41 @@ class CategoriesTable extends StatelessWidget {
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         columnWidths: const {
           0: FractionColumnWidth(.1),
-          1: FractionColumnWidth(.5),
-          2: FractionColumnWidth(.4),
+          1: FractionColumnWidth(.4),
+          2: FractionColumnWidth(.3),
+          3: FractionColumnWidth(.2),
         },
-        children: categories
-            .map(
-              (category) => TableRow(
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey.shade50,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.white, width: 1),
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: category.color,
-                      width: 32,
-                      height: 32,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => onSelection(category),
-                    child: Text(category.title),
-                  ),
-                  Text('${category.total.toStringAsFixed(2)}€')
-                ],
-              ),
-            )
-            .toList(),
+        children: categories.map(_buildRow).toList(),
       ),
     );
   }
+
+  TableRow _buildRow(category) => TableRow(
+        decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100.withOpacity(.3),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: Colors.white, width: 1),
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:8.0),
+            child: Container(
+              color: category.color,
+              height: 24,
+            ),
+          ),
+          Text(category.title),
+          Text('${category.total.toStringAsFixed(2)}€'),
+          IconButton(
+            onPressed: () => onSelection(category),
+            hoverColor: Colors.cyan.shade100,
+            color: Colors.cyan.shade700,
+            padding: const EdgeInsets.all(10),
+            splashRadius: 18,
+            icon: const Icon(Icons.zoom_in),
+          ),
+        ],
+      );
 }
 
 class CategoryDonutHero extends StatefulWidget {
