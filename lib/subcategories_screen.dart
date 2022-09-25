@@ -89,7 +89,7 @@ class _DonutBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DonutSegment(
         key: const Key('donut'),
-        data: SegmentData.fill(color: color),
+        data: ArcData.fill(color: color),
         progress: 1,
         transitionProgress: 1,
         onSelection: () {},

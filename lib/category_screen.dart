@@ -73,8 +73,6 @@ class CategoryDonutHero extends StatefulWidget {
   State<CategoryDonutHero> createState() => _CategoryDonutHeroState();
 }
 
-
-
 class _CategoryDonutHeroState extends State<CategoryDonutHero>
     with TickerProviderStateMixin {
   late final anim = AnimationController(vsync: this, duration: donutDuration);

@@ -12,7 +12,7 @@ const donutDuration = Duration(seconds: 1);
 
 class ChartView extends StatelessWidget {
   final List<Animation> intervals;
-  final List<SegmentData> segments;
+  final List<ArcData> segments;
   final Animation<double> animation;
 
   final int? selectedIndex;
@@ -29,8 +29,8 @@ class ChartView extends StatelessWidget {
     required this.transitionProgress,
     required this.onSelection,
     this.selectedIndex,
-  })  : segments = computeSegments(categories),
-        intervals = computeSegmentIntervals(
+  })  : segments = computeArcs(categories),
+        intervals = computeArcIntervals(
           anim: animation,
           categories: categories,
         );

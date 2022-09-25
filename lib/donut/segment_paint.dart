@@ -9,7 +9,7 @@ import 'segment_data.dart';
 const graphSize = Size(300, 300);
 
 class DonutSegment extends StatelessWidget {
-  final SegmentData data;
+  final ArcData data;
   final double progress;
 
   /// progression durant hero transition
@@ -26,7 +26,7 @@ class DonutSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HoverableWidget<SegmentData>(
+    return HoverableWidget<ArcData>(
       data,
       notificationBuilder: ShowTooltip.new,
       onSelection: onSelection,
@@ -94,24 +94,26 @@ class SegmentPaint extends StatelessWidget {
     required this.transitionProgress,
   }) : super(key: key);
 
-  final SegmentData data;
+  final ArcData data;
   final double progress;
   final double? transitionProgress;
 
   @override
-  Widget build(BuildContext context) => CustomPaint(
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: graphSize,
+      painter: DonutSegmentPainter(
+        data,
+        progress: progress,
+        transitionProgress: transitionProgress,
         size: graphSize,
-        painter: DonutSegmentPainter(
-          data,
-          progress: progress,
-          transitionProgress: transitionProgress,
-          size: graphSize,
-        ),
-      );
+      ),
+    );
+  }
 }
 
 class DonutSegmentPainter extends CustomPainter {
-  final SegmentData data;
+  final ArcData data;
   final double progress;
   final double? transitionProgress;
   final Size size;

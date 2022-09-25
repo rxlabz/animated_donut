@@ -12,7 +12,7 @@ class ShowTooltip extends DonutNotification {
   final String subtitle;
   final Color color;
 
-  ShowTooltip(SegmentData data, this.position)
+  ShowTooltip(ArcData data, this.position)
       : title = data.title,
         subtitle = data.subtitle,
         color = data.color;

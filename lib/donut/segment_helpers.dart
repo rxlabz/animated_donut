@@ -6,16 +6,16 @@ import 'package:quiver/iterables.dart';
 import '../model.dart';
 import 'segment_data.dart';
 
-List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
-    enumerate(categories).fold<List<SegmentData>>(
-      <SegmentData>[],
+List<ArcData> computeArcs(List<AbstractCategory> categories) =>
+    enumerate(categories).fold<List<ArcData>>(
+      <ArcData>[],
       (previousValue, category) {
         final elementSweepAngle =
             category.value.total / categories.total * 2 * math.pi;
 
         if (previousValue.isEmpty) {
           return [
-            SegmentData(
+            ArcData(
               title: category.value.title,
               subtitle: '${category.value.total.toStringAsFixed(2)}€',
               startAngle: -math.pi / 2,
@@ -28,7 +28,7 @@ List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
         final previousElement = previousValue.last;
         return previousValue
           ..add(
-            SegmentData(
+            ArcData(
               title: category.value.title,
               subtitle: '${category.value.total.toStringAsFixed(2)}€',
               startAngle:
@@ -40,7 +40,43 @@ List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
       },
     );
 
-List<Animation> computeSegmentIntervals({
+List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
+    enumerate(categories).fold<List<SegmentData>>(
+      <SegmentData>[],
+      (previousValue, category) {
+        final elementWidth =
+            FractionalOffset(category.value.total / categories.total, 0);
+
+        if (previousValue.isEmpty) {
+          return [
+            SegmentData(
+              title: category.value.title,
+              subtitle: '${category.value.total.toStringAsFixed(2)}€',
+              start: const FractionalOffset(0, 0),
+              width: elementWidth,
+              color: category.value.color,
+            )
+          ];
+        }
+
+        final previousElement = previousValue.last;
+        return previousValue
+          ..add(
+            SegmentData(
+              title: category.value.title,
+              subtitle: '${category.value.total.toStringAsFixed(2)}€',
+              start: FractionalOffset(
+                previousElement.start.dx + previousElement.width.dx,
+                0,
+              ),
+              width: elementWidth,
+              color: category.value.color,
+            ),
+          );
+      },
+    );
+
+List<Animation> computeArcIntervals({
   required Animation<double> anim,
   required List<AbstractCategory> categories,
 }) {
