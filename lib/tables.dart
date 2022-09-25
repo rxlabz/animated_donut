@@ -8,6 +8,12 @@ final tableDecoration = BoxDecoration(
   border: Border.all(color: Colors.white, width: 1),
 );
 
+final darkTableDecoration = BoxDecoration(
+  color: Colors.grey.shade900.withOpacity(.3),
+  borderRadius: BorderRadius.circular(6),
+  border: Border.all(color: Colors.transparent, width: 1),
+);
+
 class CategoriesTable extends StatelessWidget {
   final List<Category> categories;
 
@@ -40,7 +46,7 @@ class CategoriesTable extends StatelessWidget {
   }
 
   TableRow _buildRow(category) => TableRow(
-        decoration: tableDecoration,
+        decoration: darkTableDecoration,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -5,25 +5,25 @@ import 'model.dart';
 final categories = [
   Category(
     title: "Category A",
-    color: Colors.green,
+    color: Colors.lightGreen,
     subCategories: [
       SubCategory(
           title: 'SubCat. A1',
           operations: [200, 500, 192],
-          color: Colors.green.shade200),
+          color: Colors.lightGreen.shade600),
       SubCategory(
           title: 'SubCat. A2',
           operations: [100, 1200, 19],
-          color: Colors.green.shade300),
+          color: Colors.lightGreen.shade300),
       SubCategory(
           title: 'SubCat. A3',
           operations: [1000, 210],
-          color: Colors.green.shade600),
+          color: Colors.lightGreen.shade400),
     ],
   ),
   Category(
     title: "Category B",
-    color: Colors.orange,
+    color: Colors.amber,
     subCategories: [
       SubCategory(
         title: 'SubCat. B1',

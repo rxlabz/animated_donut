@@ -14,6 +14,8 @@ void main() {
   runApp(App(categories));
 }
 
+const backgroundColor = Color(0xff304349);
+
 class App extends StatelessWidget {
   final List<Category> categories;
 
@@ -21,6 +23,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+        theme: ThemeData.dark().copyWith(
+          backgroundColor: backgroundColor,
+          scaffoldBackgroundColor: backgroundColor,
+        ),
         home: SliverCategoryScreen(categories: categories),
       );
 }
@@ -49,74 +55,81 @@ class SliverCategoryScreen extends StatelessWidget {
         body: ValueListenableBuilder(
           valueListenable: selectedSectionIndex,
           builder: (context, sectionIndex, _) {
-            return CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: Colors.blueGrey.shade50,
-                  expandedHeight: 180,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text(
-                      'Donut',
-                      style: TextStyle(color: Colors.blueGrey.shade300),
-                    ),
-                    expandedTitleScale: 2,
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  sliver: SliverPersistentHeader(
-                    pinned: sectionIndex == 0,
-                    delegate: StickyChartHeaderDelegate(
-                      index: 0,
-                      showLight: true,
-                      title: 'Global',
-                      categories: categories,
-                      minHeight: 64,
-                      maxHeight: 280,
+            return SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  const SliverAppBar(
+                    backgroundColor: Colors.black12,
+                    pinned: false,
+                    floating: false,
+                    expandedHeight: 180,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: Text(
+                        'Donut',
+                        style: TextStyle(color: Colors.limeAccent),
+                      ),
+                      expandedTitleScale: 2,
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: CategoriesTable(
-                    categories: categories,
-                    selectable: false,
-                    onSelection: (category) {},
-                  ),
-                ),
-                for (final category in qv.enumerate(categories)) ...[
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     sliver: SliverPersistentHeader(
-                      pinned: category.index + 1 >= sectionIndex,
+                      pinned: sectionIndex == 0,
                       delegate: StickyChartHeaderDelegate(
-                        index: category.index + 1,
-                        title: category.value.title,
-                        categories: category.value.subCategories,
+                        index: 0,
+                        color: Colors.limeAccent,
+                        showLight: true,
+                        title: 'Global',
+                        categories: categories,
                         minHeight: 64,
-                        maxHeight: 300,
+                        maxHeight: 280,
                       ),
                     ),
                   ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      category.value.subCategories
-                          .map(
-                            (subCategory) => ListTile(
-                              title: Text(subCategory.title),
-                              subtitle: Text(
-                                  '${subCategory.operations.length} operations'),
-                              trailing: Text(
-                                '${subCategory.total}€',
-                                style: TextStyle(
-                                    fontSize: 18, color: category.value.color),
-                              ),
-                            ),
-                          )
-                          .toList(),
+                  SliverToBoxAdapter(
+                    child: CategoriesTable(
+                      categories: categories,
+                      selectable: false,
+                      onSelection: (category) {},
                     ),
-                  )
+                  ),
+                  for (final category in qv.enumerate(categories)) ...[
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(vertical: 24),
+                      sliver: SliverPersistentHeader(
+                        pinned: category.index + 1 >= sectionIndex,
+                        delegate: StickyChartHeaderDelegate(
+                          index: category.index + 1,
+                          color: category.value.color,
+                          title: category.value.title,
+                          categories: category.value.subCategories,
+                          minHeight: 64,
+                          maxHeight: 300,
+                        ),
+                      ),
+                    ),
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        category.value.subCategories
+                            .map(
+                              (subCategory) => ListTile(
+                                title: Text(subCategory.title),
+                                subtitle: Text(
+                                    '${subCategory.operations.length} operations'),
+                                trailing: Text(
+                                  '${subCategory.total}€',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: category.value.color),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    )
+                  ],
                 ],
-              ],
+              ),
             );
           },
         ),
@@ -128,6 +141,7 @@ class SliverCategoryScreen extends StatelessWidget {
 class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
   final int index;
   final String title;
+  final Color color;
 
   final List<AbstractCategory> categories;
 
@@ -144,6 +158,7 @@ class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
   StickyChartHeaderDelegate({
     required this.index,
     required this.title,
+    required this.color,
     required this.categories,
     required this.minHeight,
     required this.maxHeight,
@@ -156,7 +171,6 @@ class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    print('$index => shrinkOffset $shrinkOffset');
     final textTheme = Theme.of(context).textTheme;
     if (overlapsContent && shrinkOffset >= 1) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -170,15 +184,18 @@ class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
     }
 
     return Container(
+      color: backgroundColor,
       constraints: const BoxConstraints.expand(),
-      color: Colors.grey.shade200,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: textTheme.titleLarge),
+            child: Text(
+              title,
+              style: textTheme.titleLarge?.copyWith(color: color),
+            ),
           ),
           shrinkOffset > maxHeight - minHeight
               ? Flexible(
@@ -264,17 +281,15 @@ class DonutPainter extends CustomPainter {
     final arcs = computeArcs(categories);
 
     final shadowPaint = Paint()
-      ..blendMode = BlendMode.softLight
+      ..blendMode = BlendMode.overlay
       ..shader = ui.Gradient.radial(
         size.center(Offset.zero),
-        size.width / 3,
+        size.width / 2,
         [
-          Colors.black38,
-          Colors.transparent,
-          Colors.transparent,
-          Colors.black26
+          Colors.black26,
+          Colors.white24,
         ],
-        [0.45, .6, .8, 1],
+        [0.4, 1],
       );
 
     for (final segment in arcs) {
@@ -289,6 +304,7 @@ class DonutPainter extends CustomPainter {
       );
       path.lineTo(center.dx, center.dy);
       canvas.drawPath(path, Paint()..color = segment.color);
+
       canvas.drawPath(path, shadowPaint);
     }
   }
