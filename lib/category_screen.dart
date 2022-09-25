@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'chart_view.dart';
+import 'donut/chart_view.dart';
 import 'fade_transition.dart';
 import 'model.dart';
 import 'subcategories_screen.dart';
-import 'ui.dart';
+import 'tables.dart';
 
 /// main screen
 /// display the title, the categories donut chart and categories data table
@@ -58,55 +58,6 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
-class CategoriesTable extends StatelessWidget {
-  final List<Category> categories;
-
-  final ValueChanged<Category> onSelection;
-
-  const CategoriesTable({
-    Key? key,
-    required this.categories,
-    required this.onSelection,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        columnWidths: const {
-          0: FractionColumnWidth(.1),
-          1: FractionColumnWidth(.4),
-          2: FractionColumnWidth(.3),
-          3: FractionColumnWidth(.2),
-        },
-        children: categories.map(_buildRow).toList(),
-      ),
-    );
-  }
-
-  TableRow _buildRow(category) => TableRow(
-        decoration: tableDecoration,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Container(color: category.color, height: 24),
-          ),
-          Text(category.title),
-          Text('${category.total.toStringAsFixed(2)}€'),
-          IconButton(
-            onPressed: () => onSelection(category),
-            hoverColor: Colors.cyan.shade100,
-            color: Colors.cyan.shade700,
-            padding: const EdgeInsets.all(10),
-            splashRadius: 18,
-            icon: const Icon(Icons.zoom_in),
-          ),
-        ],
-      );
-}
-
 class CategoryDonutHero extends StatefulWidget {
   final List<Category> categories;
 
@@ -121,6 +72,8 @@ class CategoryDonutHero extends StatefulWidget {
   @override
   State<CategoryDonutHero> createState() => _CategoryDonutHeroState();
 }
+
+
 
 class _CategoryDonutHeroState extends State<CategoryDonutHero>
     with TickerProviderStateMixin {
@@ -150,9 +103,8 @@ class _CategoryDonutHeroState extends State<CategoryDonutHero>
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 24),
-          constraints: BoxConstraints.loose(graphSize),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24),
           child: Hero(
             tag: 'donut',
             flightShuttleBuilder: _buildTransitionHero,

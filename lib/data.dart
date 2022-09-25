@@ -5,7 +5,7 @@ import 'model.dart';
 final categories = [
   Category(
     title: "Category A",
-    color: Colors.green.shade400,
+    color: Colors.green,
     subCategories: [
       SubCategory(
           title: 'SubCat. A1',

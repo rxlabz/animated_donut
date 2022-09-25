@@ -3,7 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart';
 
-import 'model.dart';
+import '../model.dart';
+import 'segment_data.dart';
 
 List<SegmentData> computeSegments(List<AbstractCategory> categories) =>
     enumerate(categories).fold<List<SegmentData>>(
@@ -54,6 +55,7 @@ List<Animation> computeSegmentIntervals({
       intervalValues.add([0, end]);
       continue;
     }
+
     final end = category.value.total / categories.total;
     final previousInterval = intervalValues.last;
     final interval = CurvedAnimation(

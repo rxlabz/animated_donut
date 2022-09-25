@@ -1,31 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const graphSize = Size(300, 300);
-
-class TooltipNotification extends Notification {
-  final Offset? position;
-  final String? title;
-  final String? subtitle;
-  final Color? color;
-
-  final bool hide;
-
-  TooltipNotification({
-    this.position,
-    this.title,
-    this.subtitle,
-    this.color,
-  }) : hide = false;
-
-  TooltipNotification.hide()
-      : hide = true,
-        position = null,
-        subtitle = null,
-        color = null,
-        title = null;
-}
-
 abstract class AbstractCategory {
   final String _title;
   String get title => _title;
@@ -94,37 +69,4 @@ class SubCategory extends AbstractCategory {
 
   @override
   int get hashCode => title.hashCode ^ color.hashCode ^ operations.hashCode;
-}
-
-class SegmentData {
-  final String title;
-  final String subtitle;
-  final double startAngle;
-  final double sweepAngle;
-  final Color color;
-
-  SegmentData({
-    required this.title,
-    required this.subtitle,
-    required this.startAngle,
-    required this.sweepAngle,
-    required this.color,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SegmentData &&
-          runtimeType == other.runtimeType &&
-          title == other.title &&
-          startAngle == other.startAngle &&
-          sweepAngle == other.sweepAngle &&
-          color == other.color;
-
-  @override
-  int get hashCode =>
-      title.hashCode ^
-      startAngle.hashCode ^
-      sweepAngle.hashCode ^
-      color.hashCode;
 }
