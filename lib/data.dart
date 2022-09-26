@@ -23,7 +23,7 @@ final categories = [
   ),
   Category(
     title: "Category B",
-    color: Colors.amber,
+    color: Colors.orange,
     subCategories: [
       SubCategory(
         title: 'SubCat. B1',

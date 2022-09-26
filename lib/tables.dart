@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 
 final tableDecoration = BoxDecoration(
-  color: Colors.blueGrey.shade100.withOpacity(.3),
+  color: Colors.green.shade200.withOpacity(.3),
   borderRadius: BorderRadius.circular(6),
   border: Border.all(color: Colors.white, width: 1),
 );
@@ -30,30 +30,37 @@ class CategoriesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final decoration = theme.brightness == Brightness.light
+        ? tableDecoration
+        : darkTableDecoration;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         columnWidths: {
           0: const FractionColumnWidth(.1),
-          1:  FractionColumnWidth(selectable ? .4 : .6),
+          1: FractionColumnWidth(selectable ? .4 : .6),
           2: const FractionColumnWidth(.3),
           if (selectable) 3: const FractionColumnWidth(.2),
         },
-        children: categories.map(_buildRow).toList(),
+        children: categories
+            .map((c) => _buildRow(c, decoration: decoration))
+            .toList(),
       ),
     );
   }
 
-  TableRow _buildRow(category) => TableRow(
-        decoration: darkTableDecoration,
+  TableRow _buildRow(Category category, {required BoxDecoration decoration}) =>
+      TableRow(
+        decoration: decoration,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Container(color: category.color, height: 24),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical:12.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Text(category.title),
           ),
           Text('${category.total.toStringAsFixed(2)}€'),

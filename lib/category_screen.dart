@@ -25,7 +25,12 @@ class CategoryScreen extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(24),
-            child: Text('Donut', style: textTheme.displayMedium),
+            child: Row(
+              children: [
+                const BackButton(color: Colors.grey),
+                Text('Donut', style: textTheme.displayMedium),
+              ],
+            ),
           ),
           ValueListenableBuilder<int?>(
             valueListenable: selectedCategoryIndex,

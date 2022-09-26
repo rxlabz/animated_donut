@@ -4,32 +4,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as qv;
 
-import 'data.dart';
 import 'donut/segment_helpers.dart';
 import 'donut/segment_paint.dart';
 import 'model.dart';
 import 'tables.dart';
-
-void main() {
-  runApp(App(categories));
-}
-
-const backgroundColor = Color(0xff304349);
-
-class App extends StatelessWidget {
-  final List<Category> categories;
-
-  const App(this.categories, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => MaterialApp(
-        theme: ThemeData.dark().copyWith(
-          backgroundColor: backgroundColor,
-          scaffoldBackgroundColor: backgroundColor,
-        ),
-        home: SliverCategoryScreen(categories: categories),
-      );
-}
 
 class SectionNotification extends Notification {
   final int index;
@@ -55,10 +33,11 @@ class SliverCategoryScreen extends StatelessWidget {
         body: ValueListenableBuilder(
           valueListenable: selectedSectionIndex,
           builder: (context, sectionIndex, _) {
+            final textTheme = Theme.of(context).textTheme;
             return SafeArea(
               child: CustomScrollView(
                 slivers: [
-                  const SliverAppBar(
+                  SliverAppBar(
                     backgroundColor: Colors.black12,
                     pinned: false,
                     floating: false,
@@ -66,7 +45,7 @@ class SliverCategoryScreen extends StatelessWidget {
                     flexibleSpace: FlexibleSpaceBar(
                       title: Text(
                         'Donut',
-                        style: TextStyle(color: Colors.limeAccent),
+                        style: textTheme.headlineSmall,
                       ),
                       expandedTitleScale: 2,
                     ),
@@ -77,7 +56,7 @@ class SliverCategoryScreen extends StatelessWidget {
                       pinned: sectionIndex == 0,
                       delegate: StickyChartHeaderDelegate(
                         index: 0,
-                        color: Colors.limeAccent,
+                        color: Colors.green.shade600,
                         showLight: true,
                         title: 'Global',
                         categories: categories,
@@ -171,7 +150,8 @@ class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
     if (overlapsContent && shrinkOffset >= 1) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         SectionNotification(index).dispatch(context);
@@ -184,7 +164,7 @@ class StickyChartHeaderDelegate extends SliverPersistentHeaderDelegate {
     }
 
     return Container(
-      color: backgroundColor,
+      color: theme.scaffoldBackgroundColor,
       constraints: const BoxConstraints.expand(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
