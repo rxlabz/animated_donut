@@ -31,8 +31,7 @@ class _AppState extends State<App> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-              brightness: Brightness.dark,
-              useMaterial3: true,
+              brightness: Brightness.light,
               appBarTheme: const AppBarTheme(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.blueGrey,
@@ -44,7 +43,6 @@ class _AppState extends State<App> {
             ),
             darkTheme: ThemeData(
               brightness: Brightness.dark,
-              useMaterial3: true,
               backgroundColor: darkBackgroundColor,
               scaffoldBackgroundColor: darkBackgroundColor,
               //https://github.com/flutter/flutter/issues/93140
