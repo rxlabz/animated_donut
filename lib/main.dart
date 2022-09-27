@@ -6,8 +6,9 @@ void main() {
   runApp(const App());
 }
 
-const darkBackgroundColor = Color(0xff304349);
 final backgroundColor = Colors.green.shade50;
+const darkBackgroundColor = Color(0xff304349);
+const darkerBackgroundColor = Color(0xff26393d);
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -32,6 +33,10 @@ class _AppState extends State<App> {
               scaffoldBackgroundColor: backgroundColor,
             ),
             darkTheme: ThemeData.dark().copyWith(
+              appBarTheme: AppBarTheme(
+                backgroundColor: darkerBackgroundColor,
+                foregroundColor: Colors.blueGrey.shade300,
+              ),
               backgroundColor: darkBackgroundColor,
               scaffoldBackgroundColor: darkBackgroundColor,
             ),

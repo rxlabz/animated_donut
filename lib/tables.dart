@@ -84,32 +84,41 @@ class SubCategoriesTable extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          columnWidths: const {
-            0: FractionColumnWidth(.1),
-            1: FractionColumnWidth(.5),
-            2: FractionColumnWidth(.4),
-          },
-          children: subCategories
-              .map(
-                _buildRow,
-              )
-              .toList(),
-        ),
-      );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
-  TableRow _buildRow(e) => TableRow(
-        decoration: tableDecoration,
+    final decoration = theme.brightness == Brightness.light
+        ? tableDecoration
+        : darkTableDecoration;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Table(
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        columnWidths: const {
+          0: FractionColumnWidth(.1),
+          1: FractionColumnWidth(.5),
+          2: FractionColumnWidth(.4),
+        },
+        children: subCategories
+            .map((e) => _buildRow(subCategory: e, decoration: decoration))
+            .toList(),
+      ),
+    );
+  }
+
+  TableRow _buildRow({
+    required SubCategory subCategory,
+    required BoxDecoration decoration,
+  }) =>
+      TableRow(
+        decoration: decoration,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(color: e.color, height: 24),
+            child: Container(color: subCategory.color, height: 24),
           ),
-          Text(e.title),
-          Text('${e.total.toStringAsFixed(2)}€')
+          Text(subCategory.title),
+          Text('${subCategory.total.toStringAsFixed(2)}€')
         ],
       );
 }
